@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Unit tests for the Student class.  In addition to the JUnit annotations,
@@ -68,6 +70,26 @@ public class StudentTest
 
     String expectedString = name + " has a GPA of " + gpa;
     assertThat(student.toString(), containsString(expectedString));
+  }
+
+  @Test
+  void whenGpaIsNegativeAnExceptionIsThrown() {
+    double gpa = -1.23;
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Student("name", new ArrayList<>(), gpa, "other");
+    });
+
+  }
+
+  @Test
+  void whenGpaIsGreaterThanFourAnExceptionIsThrown() {
+    double gpa = 5.0;
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      new Student("name", new ArrayList<>(), gpa, "other");
+    });
+
   }
 
 }
