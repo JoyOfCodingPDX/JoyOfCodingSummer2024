@@ -50,7 +50,7 @@ public class Student extends Human {
    * <code>Student</code>.                                                          
    */                                                                               
   public String toString() {
-    return name + " has a GPA of " + gpa;
+    return name + " has a GPA of " + gpa + " and is taking 3 classes: Algorithms, Operating Systems, and Java.  He says \"This class is too much work\".";
   }
 
   /**
@@ -59,6 +59,15 @@ public class Student extends Human {
    * standard out by invoking its <code>toString</code> method.
    */
   public static void main(String[] args) {
-    System.err.println("Missing command line arguments");
+    if (args.length == 0) {
+      System.err.println("Missing command line arguments");
+    }
+
+    ArrayList<String> classes = new ArrayList<>();
+    classes.add("Algorithms");
+    classes.add("Operating Systems");
+    classes.add("Java");
+    Student student = new Student("Dave", classes, 3.64, "male");
+    System.out.println(student);
   }
 }
