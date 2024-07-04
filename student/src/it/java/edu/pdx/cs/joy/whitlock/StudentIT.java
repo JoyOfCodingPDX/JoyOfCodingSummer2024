@@ -1,7 +1,6 @@
 package edu.pdx.cs.joy.whitlock;
 
 import edu.pdx.cs.joy.InvokeMainTestCase;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
