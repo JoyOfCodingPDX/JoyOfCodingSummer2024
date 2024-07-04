@@ -28,6 +28,16 @@ class StudentIT extends InvokeMainTestCase {
     assertThat(result.getTextWrittenToStandardOut(), containsString("Dave has a GPA of 3.64 and is taking 3 classes: Algorithms, Operating Systems, and Java.  He says \"This class is too much work\"."));
   }
 
+  @Test
+  void gpaThatIsNotAnNumberWritesMessageToStandardError() {
+    String gpa = "Dave";
+    MainMethodResult result = invokeMain("Dave", "male", gpa, "Algorithms", "Operating Systems", "Java");
+    assertThat(result.getTextWrittenToStandardOut(), equalTo(""));
+    assertThat(result.getTextWrittenToStandardError().trim(), equalTo("Invalid GPA: " + gpa));
+  }
+
+  // Test only one argument (i.e. missing GPA)
+
   private MainMethodResult invokeMain(String... args) {
     return invokeMain(Student.class, args);
   }

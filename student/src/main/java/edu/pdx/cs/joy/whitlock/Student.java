@@ -61,13 +61,25 @@ public class Student extends Human {
   public static void main(String[] args) {
     if (args.length == 0) {
       System.err.println("Missing command line arguments");
+      return;
     }
+
+    String gpaString = args[2];
+    double gpa;
+    try {
+      gpa = Double.parseDouble(gpaString);
+
+    } catch (NumberFormatException ex) {
+      System.err.println("Invalid GPA: " + gpaString);
+      return;
+    }
+
 
     ArrayList<String> classes = new ArrayList<>();
     classes.add("Algorithms");
     classes.add("Operating Systems");
     classes.add("Java");
-    Student student = new Student("Dave", classes, 3.64, "male");
+    Student student = new Student("Dave", classes, gpa, "male");
     System.out.println(student);
   }
 }
