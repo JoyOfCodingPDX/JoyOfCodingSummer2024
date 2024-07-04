@@ -64,6 +64,11 @@ public class Student extends Human {
       return;
     }
 
+    if (args.length <= 2) {
+      System.err.println("Missing GPA");
+      return;
+    }
+
     String gpaString = args[2];
     double gpa;
     try {
