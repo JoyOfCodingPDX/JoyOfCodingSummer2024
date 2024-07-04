@@ -7,9 +7,11 @@ import java.util.ArrayList;
 /**                                                                                 
  * This class is represents a <code>Student</code>.                                 
  */                                                                                 
-public class Student extends Human {                                                
-                                                                                    
-  /**                                                                               
+public class Student extends Human {
+
+  private final double gpa;
+
+  /**
    * Creates a new <code>Student</code>                                             
    *                                                                                
    * @param name                                                                    
@@ -24,6 +26,15 @@ public class Student extends Human {
    */                                                                               
   public Student(String name, ArrayList<String> classes, double gpa, String gender) {
     super(name);
+    this.gpa = validateGpa(gpa);
+  }
+
+  private double validateGpa(double gpa) {
+    if (gpa < 0.0 || gpa > 4.0) {
+      throw new IllegalArgumentException();
+    }
+
+   return gpa;
   }
 
   /**                                                                               
@@ -31,7 +42,7 @@ public class Student extends Human {
    */
   @Override
   public String says() {                                                            
-    throw new UnsupportedOperationException("Not implemented yet");
+    return "This class is too much work";
   }
                                                                                     
   /**                                                                               
@@ -39,7 +50,7 @@ public class Student extends Human {
    * <code>Student</code>.                                                          
    */                                                                               
   public String toString() {
-    throw new UnsupportedOperationException("Not implemented yet");
+    return name + " has a GPA of " + gpa + " and is taking 3 classes: Algorithms, Operating Systems, and Java.  He says \"This class is too much work\".";
   }
 
   /**
@@ -48,6 +59,32 @@ public class Student extends Human {
    * standard out by invoking its <code>toString</code> method.
    */
   public static void main(String[] args) {
-    System.err.println("Missing command line arguments");
+    if (args.length == 0) {
+      System.err.println("Missing command line arguments");
+      return;
+    }
+
+    if (args.length <= 2) {
+      System.err.println("Missing GPA");
+      return;
+    }
+
+    String gpaString = args[2];
+    double gpa;
+    try {
+      gpa = Double.parseDouble(gpaString);
+
+    } catch (NumberFormatException ex) {
+      System.err.println("Invalid GPA: " + gpaString);
+      return;
+    }
+
+
+    ArrayList<String> classes = new ArrayList<>();
+    classes.add("Algorithms");
+    classes.add("Operating Systems");
+    classes.add("Java");
+    Student student = new Student("Dave", classes, gpa, "male");
+    System.out.println(student);
   }
 }
