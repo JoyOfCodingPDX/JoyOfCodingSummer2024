@@ -69,7 +69,7 @@ public class PhoneBillServlet extends HttpServlet
         this.dictionary.put(word, definition);
 
         PrintWriter pw = response.getWriter();
-        pw.println(Messages.definedWordAs(word, definition));
+        pw.println(Messages.createdPhoneCall(word, definition));
         pw.flush();
 
         response.setStatus( HttpServletResponse.SC_OK);

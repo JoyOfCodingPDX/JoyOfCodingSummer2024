@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.MethodOrderer.MethodName;
 
@@ -24,9 +23,9 @@ class Project4IT extends InvokeMainTestCase {
     private static final String PORT = System.getProperty("http.port", "8080");
 
     @Test
-    void test0RemoveAllMappings() throws IOException {
+    void test0RemoveAllPhoneBills() throws IOException {
       PhoneBillRestClient client = new PhoneBillRestClient(HOSTNAME, Integer.parseInt(PORT));
-      client.removeAllDictionaryEntries();
+      client.removeAllPhoneBills();
     }
 
     @Test
@@ -36,20 +35,20 @@ class Project4IT extends InvokeMainTestCase {
     }
 
     @Test
-    void test2EmptyServer() {
+    void test2MissingCustomerName() {
         MainMethodResult result = invokeMain( Project4.class, HOSTNAME, PORT );
 
-        assertThat(result.getTextWrittenToStandardError(), equalTo(""));
+        assertThat(result.getTextWrittenToStandardError(), containsString("Missing customer name"));
 
         String out = result.getTextWrittenToStandardOut();
-        assertThat(out, out, containsString(PrettyPrinter.formatWordCount(0)));
+        assertThat(out, out, emptyString());
     }
 
     @Test
-    void test3NoDefinitionsThrowsAppointmentBookRestException() {
-        String word = "WORD";
+    void test3UnknownPhoneBillThrowsAppointmentBookRestException() {
+        String customerName = "Customer";
         try {
-            invokeMain(Project4.class, HOSTNAME, PORT, word);
+            invokeMain(Project4.class, HOSTNAME, PORT, customerName);
             fail("Expected a RestException to be thrown");
 
         } catch (UncaughtExceptionInMain ex) {
@@ -59,29 +58,22 @@ class Project4IT extends InvokeMainTestCase {
     }
 
     @Test
-    void test4AddDefinition() {
-        String word = "WORD";
-        String definition = "DEFINITION";
+    void test4AddPhoneCall() {
+        String customerName = "Customer";
+        String callerPhoneNumber = "123-456-7890";
 
-        MainMethodResult result = invokeMain( Project4.class, HOSTNAME, PORT, word, definition );
+        MainMethodResult result = invokeMain( Project4.class, HOSTNAME, PORT, customerName, callerPhoneNumber );
 
         assertThat(result.getTextWrittenToStandardError(), equalTo(""));
 
         String out = result.getTextWrittenToStandardOut();
-        assertThat(out, out, containsString(Messages.definedWordAs(word, definition)));
+        assertThat(out, out, containsString(Messages.createdPhoneCall(customerName, callerPhoneNumber)));
 
-        result = invokeMain( Project4.class, HOSTNAME, PORT, word );
-
-        assertThat(result.getTextWrittenToStandardError(), equalTo(""));
-
-        out = result.getTextWrittenToStandardOut();
-        assertThat(out, out, containsString(PrettyPrinter.formatDictionaryEntry(word, definition)));
-
-        result = invokeMain( Project4.class, HOSTNAME, PORT );
+        result = invokeMain( Project4.class, HOSTNAME, PORT, customerName );
 
         assertThat(result.getTextWrittenToStandardError(), equalTo(""));
 
         out = result.getTextWrittenToStandardOut();
-        assertThat(out, out, containsString(PrettyPrinter.formatDictionaryEntry(word, definition)));
+        assertThat(out, out, containsString(PrettyPrinter.formatPhoneCall(customerName, callerPhoneNumber)));
     }
 }

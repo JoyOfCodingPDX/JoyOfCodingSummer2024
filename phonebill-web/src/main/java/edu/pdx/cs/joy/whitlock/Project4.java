@@ -1,7 +1,6 @@
 package edu.pdx.cs.joy.whitlock;
 
 import edu.pdx.cs.joy.ParserException;
-import edu.pdx.cs.joy.web.HttpRequestHelper;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -61,21 +60,17 @@ public class Project4 {
         String message;
         try {
             if (word == null) {
-                // Print all word/definition pairs
-                Map<String, String> dictionary = client.getAllDictionaryEntries();
-                StringWriter sw = new StringWriter();
-                PrettyPrinter pretty = new PrettyPrinter(sw);
-                pretty.dump(dictionary);
-                message = sw.toString();
+                System.err.println("Missing customer name");
+                return;
 
             } else if (definition == null) {
                 // Print all dictionary entries
-                message = PrettyPrinter.formatDictionaryEntry(word, client.getDefinition(word));
+                message = PrettyPrinter.formatPhoneCall(word, client.getDefinition(word));
 
             } else {
                 // Post the word/definition pair
                 client.addDictionaryEntry(word, definition);
-                message = Messages.definedWordAs(word, definition);
+                message = Messages.createdPhoneCall(word, definition);
             }
 
         } catch (IOException | ParserException ex ) {

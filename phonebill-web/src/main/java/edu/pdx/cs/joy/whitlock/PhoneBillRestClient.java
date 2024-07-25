@@ -69,7 +69,7 @@ public class PhoneBillRestClient {
       throwExceptionIfNotOkayHttpStatus(response);
     }
 
-  public void removeAllDictionaryEntries() throws IOException {
+  public void removeAllPhoneBills() throws IOException {
       Response response = http.delete(Map.of());
       throwExceptionIfNotOkayHttpStatus(response);
     }

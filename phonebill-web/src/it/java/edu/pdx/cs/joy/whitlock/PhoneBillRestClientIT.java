@@ -31,7 +31,7 @@ class PhoneBillRestClientIT {
   @Test
   void test0RemoveAllDictionaryEntries() throws IOException {
     PhoneBillRestClient client = newPhoneBillRestClient();
-    client.removeAllDictionaryEntries();
+    client.removeAllPhoneBills();
   }
 
   @Test
