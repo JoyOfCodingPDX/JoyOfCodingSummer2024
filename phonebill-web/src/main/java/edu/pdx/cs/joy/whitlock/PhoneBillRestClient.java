@@ -60,7 +60,8 @@ public class PhoneBillRestClient {
     String content = response.getContent();
 
     TextParser parser = new TextParser(new StringReader(content));
-    return parser.parse().get(word);
+    Map<String, String> dictionary = parser.parse();
+    return dictionary.get(word);
   }
 
     public void addDictionaryEntry(String word, String definition) throws IOException {

@@ -65,6 +65,7 @@ public class PhoneBillServlet extends HttpServlet
             return;
         }
 
+        System.out.println("Defining " + word + " as " + definition);
         this.dictionary.put(word, definition);
 
         PrintWriter pw = response.getWriter();
@@ -82,6 +83,7 @@ public class PhoneBillServlet extends HttpServlet
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
+        System.out.println("Deleting all dictionary entries");
 
         this.dictionary.clear();
 
@@ -112,6 +114,7 @@ public class PhoneBillServlet extends HttpServlet
      */
     private void writeDefinition(String word, HttpServletResponse response) throws IOException {
         String definition = this.dictionary.get(word);
+        System.out.println("Writing definition for " + word + " as " + definition);
 
         if (definition == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -134,6 +137,7 @@ public class PhoneBillServlet extends HttpServlet
      */
     private void writeAllDictionaryEntries(HttpServletResponse response ) throws IOException
     {
+        System.out.println("Writing all dictionary entries");
         PrintWriter pw = response.getWriter();
         TextDumper dumper = new TextDumper(pw);
         dumper.dump(dictionary);
