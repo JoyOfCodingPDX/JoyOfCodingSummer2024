@@ -11,8 +11,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.*;
 class PhoneBillServletTest {
 
   @Test
-  void initiallyServletContainsNoDictionaryEntries() throws ServletException, IOException {
+  void missingCustomerNameReturnPreconditionFailedStatus() throws ServletException, IOException {
     PhoneBillServlet servlet = new PhoneBillServlet();
 
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -35,19 +34,19 @@ class PhoneBillServletTest {
 
     // Nothing is written to the response's PrintWriter
     verify(pw, never()).println(anyString());
-    verify(response).setStatus(HttpServletResponse.SC_OK);
+    verify(response).sendError(eq(HttpServletResponse.SC_PRECONDITION_FAILED), anyString());
   }
 
   @Test
-  void addOneWordToDictionary() throws ServletException, IOException {
+  void addPhoneCall() throws ServletException, IOException {
     PhoneBillServlet servlet = new PhoneBillServlet();
 
-    String word = "TEST WORD";
-    String definition = "TEST DEFINITION";
+    String customer = "TEST CUSTOMER";
+    String caller = "123-456-2349";
 
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(PhoneBillServlet.CUSTOMER_PARAMETER)).thenReturn(word);
-    when(request.getParameter(PhoneBillServlet.CALLER_PARAMETER)).thenReturn(definition);
+    when(request.getParameter(PhoneBillServlet.CUSTOMER_PARAMETER)).thenReturn(customer);
+    when(request.getParameter(PhoneBillServlet.CALLER_PARAMETER)).thenReturn(caller);
 
     HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -59,7 +58,7 @@ class PhoneBillServletTest {
 
     servlet.doPost(request, response);
 
-    assertThat(stringWriter.toString(), containsString(Messages.createdPhoneCall(word, definition)));
+    assertThat(stringWriter.toString(), containsString(Messages.createdPhoneCall(customer, caller)));
 
     // Use an ArgumentCaptor when you want to make multiple assertions against the value passed to the mock
     ArgumentCaptor<Integer> statusCode = ArgumentCaptor.forClass(Integer.class);
@@ -67,7 +66,9 @@ class PhoneBillServletTest {
 
     assertThat(statusCode.getValue(), equalTo(HttpServletResponse.SC_OK));
 
-    assertThat(servlet.getDefinition(word), equalTo(definition));
+    PhoneBill bill = servlet.getPhoneBill(customer);
+    assertThat(bill, notNullValue());
+    assertThat(bill.getPhoneCalls().iterator().next().getCaller(), equalTo(caller));
   }
 
 }
