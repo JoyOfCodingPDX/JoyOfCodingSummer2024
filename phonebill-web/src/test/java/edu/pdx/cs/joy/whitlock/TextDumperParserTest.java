@@ -13,17 +13,10 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class TextDumperParserTest {
 
-  @Test
-  void emptyMapCanBeDumpedAndParsed() throws ParserException {
-    Map<String, String> map = Collections.emptyMap();
-    Map<String, String> read = dumpAndParse(map);
-    assertThat(read, equalTo(map));
-  }
-
-  private Map<String, String> dumpAndParse(Map<String, String> map) throws ParserException {
+  private PhoneBill dumpAndParse(PhoneBill bill) throws ParserException {
     StringWriter sw = new StringWriter();
     TextDumper dumper = new TextDumper(sw);
-    dumper.dump(map);
+    dumper.dump(bill);
 
     String text = sw.toString();
 
@@ -33,8 +26,9 @@ public class TextDumperParserTest {
 
   @Test
   void dumpedTextCanBeParsed() throws ParserException {
-    Map<String, String> map = Map.of("one", "1", "two", "2");
-    Map<String, String> read = dumpAndParse(map);
-    assertThat(read, equalTo(map));
+    PhoneBill bill = new PhoneBill("Customer");
+    bill.addPhoneCall(new PhoneCall("123-456-7890"));
+    PhoneBill bill2 = dumpAndParse(bill);
+    assertThat(bill2, equalTo(bill));
   }
 }

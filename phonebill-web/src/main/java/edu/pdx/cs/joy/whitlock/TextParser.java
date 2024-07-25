@@ -17,10 +17,8 @@ public class TextParser {
     this.reader = reader;
   }
 
-  public Map<String, String> parse() throws ParserException {
+  public PhoneBill parse() throws ParserException {
     Pattern pattern = Pattern.compile("(.*) : (.*)");
-
-    Map<String, String> map = new HashMap<>();
 
     try (
       BufferedReader br = new BufferedReader(this.reader)
@@ -32,16 +30,18 @@ public class TextParser {
           throw new ParserException("Unexpected text: " + line);
         }
 
-        String word = matcher.group(1);
-        String definition = matcher.group(2);
+        String customer = matcher.group(1);
+        String caller = matcher.group(2);
 
-        map.put(word, definition);
+        PhoneBill bill = new PhoneBill(customer);
+        bill.addPhoneCall(new PhoneCall(caller));
+        return bill;
       }
 
     } catch (IOException e) {
       throw new ParserException("While parsing dictionary", e);
     }
 
-    return map;
+    throw new IllegalStateException("No Phone Bill in text");
   }
 }

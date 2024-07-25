@@ -8,7 +8,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -29,27 +28,22 @@ class PhoneBillRestClientIT {
   }
 
   @Test
-  void test0RemoveAllDictionaryEntries() throws IOException {
+  void test0RemoveAllPhoneBills() throws IOException {
     PhoneBillRestClient client = newPhoneBillRestClient();
     client.removeAllPhoneBills();
   }
 
-  @Test
-  void test1EmptyServerContainsNoDictionaryEntries() throws IOException, ParserException {
-    PhoneBillRestClient client = newPhoneBillRestClient();
-    Map<String, String> dictionary = client.getAllDictionaryEntries();
-    assertThat(dictionary.size(), equalTo(0));
-  }
 
   @Test
-  void test2DefineOneWord() throws IOException, ParserException {
+  void test2AddPhoneCall() throws IOException, ParserException {
     PhoneBillRestClient client = newPhoneBillRestClient();
-    String testWord = "TEST WORD";
-    String testDefinition = "TEST DEFINITION";
-    client.addDictionaryEntry(testWord, testDefinition);
+    String customer = "TEST WORD";
+    String caller = "TEST DEFINITION";
+    client.addPhoneCall(customer, caller);
 
-    String definition = client.getDefinition(testWord);
-    assertThat(definition, equalTo(testDefinition));
+    PhoneBill bill = client.getPhoneBill(customer);
+    assertThat(bill.getCustomer(), equalTo(customer));
+    assertThat(bill.getPhoneCalls().iterator().next().getCaller(), equalTo(caller));
   }
 
   @Test
@@ -58,9 +52,9 @@ class PhoneBillRestClientIT {
     String emptyString = "";
 
     RestException ex =
-      assertThrows(RestException.class, () -> client.addDictionaryEntry(emptyString, emptyString));
+      assertThrows(RestException.class, () -> client.addPhoneCall(emptyString, emptyString));
     assertThat(ex.getHttpStatusCode(), equalTo(HttpURLConnection.HTTP_PRECON_FAILED));
-    assertThat(ex.getMessage(), containsString(Messages.missingRequiredParameter(PhoneBillServlet.WORD_PARAMETER)));
+    assertThat(ex.getMessage(), containsString(Messages.missingRequiredParameter(PhoneBillServlet.CUSTOMER_PARAMETER)));
   }
 
 }

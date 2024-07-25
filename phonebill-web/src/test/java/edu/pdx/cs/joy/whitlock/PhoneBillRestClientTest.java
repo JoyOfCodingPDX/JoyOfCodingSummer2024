@@ -17,20 +17,23 @@ import static org.mockito.Mockito.when;
 public class PhoneBillRestClientTest {
 
   @Test
-  void getAllDictionaryEntriesPerformsHttpGetWithNoParameters() throws ParserException, IOException {
-    Map<String, String> dictionary = Map.of("One", "1", "Two", "2");
+  void getAllPhoneBillForCustomerPerformsHttpGetWithCustomerName() throws ParserException, IOException {
+    String customerName = "Customer Name";
+    PhoneBill bill = new PhoneBill(customerName);
+    String caller = "123-456-7890";
+    bill.addPhoneCall(new PhoneCall(caller));
 
     HttpRequestHelper http = mock(HttpRequestHelper.class);
-    when(http.get(eq(Map.of()))).thenReturn(dictionaryAsText(dictionary));
+    when(http.get(eq(Map.of(PhoneBillServlet.CUSTOMER_PARAMETER, customerName)))).thenReturn(phoneBillAsText(bill));
 
     PhoneBillRestClient client = new PhoneBillRestClient(http);
 
-    assertThat(client.getAllDictionaryEntries(), equalTo(dictionary));
+    assertThat(client.getPhoneBill(customerName), equalTo(bill));
   }
 
-  private HttpRequestHelper.Response dictionaryAsText(Map<String, String> dictionary) {
+  private HttpRequestHelper.Response phoneBillAsText(PhoneBill bill) {
     StringWriter writer = new StringWriter();
-    new TextDumper(writer).dump(dictionary);
+    new TextDumper(writer).dump(bill);
 
     return new HttpRequestHelper.Response(writer.toString());
   }

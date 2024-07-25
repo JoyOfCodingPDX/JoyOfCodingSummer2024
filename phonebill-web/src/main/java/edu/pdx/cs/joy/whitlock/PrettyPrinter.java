@@ -10,15 +10,9 @@ public class PrettyPrinter {
   private final Writer writer;
 
   @VisibleForTesting
-  static String formatWordCount(int count )
+  static String formatPhoneCall(String customer, String caller )
   {
-    return String.format( "Dictionary on server contains %d words", count );
-  }
-
-  @VisibleForTesting
-  static String formatPhoneCall(String word, String definition )
-  {
-    return String.format("  %s -> %s", word, definition);
+    return String.format("  %s -> %s", customer, caller);
   }
 
 
@@ -26,18 +20,13 @@ public class PrettyPrinter {
     this.writer = writer;
   }
 
-  public void dump(Map<String, String> dictionary) {
+  public void dump(PhoneBill bill) {
     try (
       PrintWriter pw = new PrintWriter(this.writer)
     ) {
-
-      pw.println(formatWordCount(dictionary.size()));
-
-      for (Map.Entry<String, String> entry : dictionary.entrySet()) {
-        String word = entry.getKey();
-        String definition = entry.getValue();
-        pw.println(formatPhoneCall(word, definition));
-      }
+      String customer = bill.getCustomer();
+      String caller = bill.getPhoneCalls().iterator().next().getCaller();
+      pw.println(formatPhoneCall(customer, caller));
 
       pw.flush();
     }

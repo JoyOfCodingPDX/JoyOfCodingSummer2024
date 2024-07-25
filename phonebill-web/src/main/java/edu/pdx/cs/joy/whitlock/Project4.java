@@ -5,7 +5,6 @@ import edu.pdx.cs.joy.ParserException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
-import java.util.Map;
 
 /**
  * The main class that parses the command line and communicates with the
@@ -64,12 +63,15 @@ public class Project4 {
                 return;
 
             } else if (definition == null) {
-                // Print all dictionary entries
-                message = PrettyPrinter.formatPhoneCall(word, client.getDefinition(word));
+                // Pretty print the Phone Bill
+                PhoneBill bill = client.getPhoneBill(word);
+                StringWriter sw = new StringWriter();
+                new PrettyPrinter(sw).dump(bill);
+                message = sw.toString();
 
             } else {
                 // Post the word/definition pair
-                client.addDictionaryEntry(word, definition);
+                client.addPhoneCall(word, definition);
                 message = Messages.createdPhoneCall(word, definition);
             }
 

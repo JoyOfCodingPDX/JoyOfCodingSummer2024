@@ -46,8 +46,8 @@ class PhoneBillServletTest {
     String definition = "TEST DEFINITION";
 
     HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getParameter(PhoneBillServlet.WORD_PARAMETER)).thenReturn(word);
-    when(request.getParameter(PhoneBillServlet.DEFINITION_PARAMETER)).thenReturn(definition);
+    when(request.getParameter(PhoneBillServlet.CUSTOMER_PARAMETER)).thenReturn(word);
+    when(request.getParameter(PhoneBillServlet.CALLER_PARAMETER)).thenReturn(definition);
 
     HttpServletResponse response = mock(HttpServletResponse.class);
 

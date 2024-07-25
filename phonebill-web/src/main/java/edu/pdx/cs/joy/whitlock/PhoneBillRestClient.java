@@ -41,31 +41,19 @@ public class PhoneBillRestClient {
   }
 
   /**
-   * Returns all dictionary entries from the server
-   */
-  public Map<String, String> getAllDictionaryEntries() throws IOException, ParserException {
-    Response response = http.get(Map.of());
-    throwExceptionIfNotOkayHttpStatus(response);
-
-    TextParser parser = new TextParser(new StringReader(response.getContent()));
-    return parser.parse();
-  }
-
-  /**
    * Returns the definition for the given word
    */
-  public String getDefinition(String word) throws IOException, ParserException {
-    Response response = http.get(Map.of(PhoneBillServlet.WORD_PARAMETER, word));
+  public PhoneBill getPhoneBill(String customer) throws IOException, ParserException {
+    Response response = http.get(Map.of(PhoneBillServlet.CUSTOMER_PARAMETER, customer));
     throwExceptionIfNotOkayHttpStatus(response);
     String content = response.getContent();
 
     TextParser parser = new TextParser(new StringReader(content));
-    Map<String, String> dictionary = parser.parse();
-    return dictionary.get(word);
+    return parser.parse();
   }
 
-    public void addDictionaryEntry(String word, String definition) throws IOException {
-      Response response = http.post(Map.of(PhoneBillServlet.WORD_PARAMETER, word, PhoneBillServlet.DEFINITION_PARAMETER, definition));
+    public void addPhoneCall(String word, String definition) throws IOException {
+      Response response = http.post(Map.of(PhoneBillServlet.CUSTOMER_PARAMETER, word, PhoneBillServlet.CALLER_PARAMETER, definition));
       throwExceptionIfNotOkayHttpStatus(response);
     }
 

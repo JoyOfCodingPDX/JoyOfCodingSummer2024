@@ -11,13 +11,14 @@ public class TextDumper {
     this.writer = writer;
   }
 
-  public void dump(Map<String, String> dictionary) {
+  public void dump(PhoneBill bill) {
     try (
       PrintWriter pw = new PrintWriter(this.writer)
     ){
-      for (Map.Entry<String, String> entry : dictionary.entrySet()) {
-        pw.println(entry.getKey() + " : " + entry.getValue());
-      }
+      String customer = bill.getCustomer();
+      PhoneCall call = bill.getPhoneCalls().iterator().next();
+      String caller = call.getCaller();
+      pw.println(customer + " : " + caller);
 
       pw.flush();
     }
