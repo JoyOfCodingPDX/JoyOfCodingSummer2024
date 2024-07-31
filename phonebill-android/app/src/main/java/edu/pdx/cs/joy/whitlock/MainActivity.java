@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == GET_SUM) {
             if (resultCode == RESULT_OK && data != null) {
                 int sum = data.getIntExtra(CalculatorActivity.SUM_VALUE, 0);
-                toast("The sum was " + sum);
+                PhoneCall call = new PhoneCall(sum);
+                toast("The phone is " + call);
                 this.sums.add(sum);
                 try {
                     writeSumsToFile();
