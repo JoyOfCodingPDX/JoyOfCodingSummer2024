@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <EditText
-            android:id="@+id/editTextText"
+            android:id="@+id/left"
             android:layout_width="71dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -59,7 +59,7 @@
             android:textAlignment="center" />
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/right"
             android:layout_width="44dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -72,10 +72,11 @@
             android:layout_width="17dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="computeSum"
             android:text="@string/equals" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/sum"
             android:layout_width="43dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
