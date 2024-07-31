@@ -15,6 +15,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,9 +44,21 @@ public class MainActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.sums);
         listView.setAdapter(this.sums);
 
-        this.sums.add(1);
-        this.sums.add(2);
-        this.sums.add(3);
+        try {
+            readSumsFromFile();
+        } catch (IOException e) {
+            toast("While reading sums file: " + e);
+        }
+    }
+
+    private void readSumsFromFile() throws IOException {
+        File sumsFile = getSumsFile();
+        try (BufferedReader br = new BufferedReader(new FileReader(sumsFile))) {
+            for (String line = br.readLine(); line != null; line = br.readLine()) {
+                int sum = Integer.parseInt(line);
+                this.sums.add(sum);
+            }
+        }
     }
 
     public void launchCalculator(View view) {
@@ -54,8 +73,33 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == GET_SUM) {
             if (resultCode == RESULT_OK && data != null) {
                 int sum = data.getIntExtra(CalculatorActivity.SUM_VALUE, 0);
-                Toast.makeText(this, "The sum was " + sum, Toast.LENGTH_LONG).show();
+                toast("The sum was " + sum);
+                this.sums.add(sum);
+                try {
+                    writeSumsToFile();
+                } catch (IOException e) {
+                    toast("While writing sums: " + e.getMessage());
+                }
             }
         }
+    }
+
+    private void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void writeSumsToFile() throws IOException {
+        File sumsFiles = getSumsFile();
+        try (PrintWriter pw = new PrintWriter(new FileWriter(sumsFiles))) {
+            for (int i = 0; i < this.sums.getCount(); i++) {
+                Integer sum = this.sums.getItem(i);
+                pw.println(sum);
+            }
+            pw.flush();
+        }
+    }
+
+    private File getSumsFile() {
+        return new File(this.getDataDir(), "sums.txt");
     }
 }
