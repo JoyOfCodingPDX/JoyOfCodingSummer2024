@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,12 +36,42 @@ public class CalculatorActivity extends AppCompatActivity {
         TextView sum = findViewById(R.id.sum);
 
         String leftString = left.getText().toString();
-        String rightString = right.getText().toString();
+        if (isEmpty(leftString)) {
+            toast("Enter value for left operand");
+            return;
+        }
 
-        int leftValue = Integer.parseInt(leftString);
-        int rightValue = Integer.parseInt(rightString);
+        String rightString = right.getText().toString();
+        if (isEmpty(rightString)) {
+            toast("Enter value for right operand");
+            return;
+        }
+
+        int leftValue;
+        try {
+            leftValue = Integer.parseInt(leftString);
+        } catch (NumberFormatException ex) {
+            toast("Left value \"" + leftString + "\" is not an integer");
+            return;
+        }
+        int rightValue;
+        try {
+            rightValue = Integer.parseInt(rightString);
+        } catch (NumberFormatException ex) {
+            toast("Right value \"" + rightString + "\" is not an integer");
+            return;
+        }
+
         int sumValue = leftValue + rightValue;
 
         sum.setText(String.valueOf(sumValue));
+    }
+
+    private void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private boolean isEmpty(String string) {
+        return string == null || string.isEmpty();
     }
 }
